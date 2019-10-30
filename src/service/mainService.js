@@ -24,8 +24,16 @@ function getDistance(mVec, sVec) {
 
 async function postCoord(rssi) {
     // get Server's BSSID 8
-    let serverBssid = ['06:09:b4:76:cc:d4', '06:09:b4:76:cc:ac', '06:09:b4:76:cc:d4', '0a:09:b4:76:cc:94', '0e:09:b4:76:cc:94', '0e:09:b4:76:cc:ac', '12:09:b4:76:cc:94', '1a:09:b4:76:cc:94', '1a:09:b4:76:cc:ac'];
-
+    let serverBssid = ['06:09:b4:76:cc:ac',
+        '06:09:b4:76:cc:d4',
+        '0a:09:b4:76:cc:94',
+        '0e:09:b4:76:cc:94',
+        '0e:09:b4:76:cc:ac',
+        '12:09:b4:76:cc:94',
+        '1a:09:b4:76:cc:94',
+        '1a:09:b4:76:cc:ac'
+    ];
+    
     // become select sql attr like "ap0, ap3, ap5, ap7", [0, 3, 5, 7]
     let apStr = '';
     let apNum = [];
