@@ -28,17 +28,22 @@ function getSimilarity(mVec, sVec) {
     let mul = 0;
 
     // matrix multiple
-    for(let i=0; i<mVec.length; i++){
-        // var row = [];
-        for(let j=0; j<mVec.length; j++){
-            // let x = 0;
-            for(let k=0; k<mVec.length; k++) {
-                if(sVec[k] != null)
-                    mul += mVec[i][k]*sVec[k][j];
-            }
-            // row.push(x);
-        }
-        // mul.push(row);
+    // for(let i=0; i<mVec.length; i++){
+    //     // var row = [];
+    //     for(let j=0; j<mVec.length; j++){
+    //         // let x = 0;
+    //         for(let k=0; k<mVec.length; k++) {
+    //             if(sVec[k] != null)
+    //                 mul += mVec[i][k]*sVec[k][j];
+    //         }
+    //         // row.push(x);
+    //     }
+    //     // mul.push(row);
+    // }
+
+    for(let i=0; i<mVec.length; i++) {
+        if(sVec[i] != null)
+            mul = mVec[i] * sVec[i];
     }
 
     for (let i=0; i<mVec.length; i++) {
