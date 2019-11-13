@@ -25,20 +25,20 @@ function getDistance(mVec, sVec) {
 function getSimilarity(mVec, sVec) {
     let sumM = 0;
     let sumS = 0;
-    let mul = [];
+    let mul = 0;
 
     // matrix multiple
     for(let i=0; i<mVec.length; i++){
-        var row = [];
+        // var row = [];
         for(let j=0; j<mVec.length; j++){
-            let x = 0;
+            // let x = 0;
             for(let k=0; k<mVec.length; k++) {
-                if(sVec[i] != null)
-                    x += mVec[i][k]*sVec[k][j];
+                if(sVec[k] != null)
+                    mul += mVec[i][k]*sVec[k][j];
             }
-            row.push(x);
+            // row.push(x);
         }
-        mul.push(row);
+        // mul.push(row);
     }
 
     for (let i=0; i<mVec.length; i++) {
