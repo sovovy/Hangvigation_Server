@@ -6,7 +6,10 @@ const { response, errorResponse } = require('../library/response');
 // (rssi) => {좌표}
 router.post('/coord', async (req, res)=>{
     try {
-      const result = await mainService.postCoord(req.body); 
+      let result = await mainService.postCoord(req.body); 
+      const res2 = await mainService.postCoordBefore(req.body);
+      result.x2 = res2.x; 
+      result.y2 = res2.y; 
       response('Success', result, res, 200);
 
   } catch (error) {
