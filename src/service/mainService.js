@@ -33,7 +33,7 @@ function getSimilarity(mVec, sVec) {
         for(let j=0; j<mVec.length; j++){
             let x = 0;
             for(let k=0; k<mVec.length; k++) {
-                if(sVec[i] != null)
+                if(sVec[k] != null)
                     x += mVec[i][k]*sVec[k][j];
             }
             row.push(x);
@@ -75,14 +75,14 @@ async function postCoord(rssi) {
         let pos = serverBssid.indexOf(rssi[i].bssid);
 
         if (pos!=-1) {
-            apStr += `ap${pos}, `;
+            apStr += `ap${pos},`;
             apNum.push(pos);
             mRssi.push(rssi[i].rssi);
         }
     }
 
     // delete apStr's last ch (,)
-    apStr = apStr.slice(0, -2);
+    apStr = apStr.slice(0, -1);
     
     // get Server's rssi
     let serverRssi = await mainDao.selectRssi(apStr);
@@ -136,14 +136,14 @@ async function postCoordBefore(rssi){
         let pos = serverBssid.indexOf(rssi[i].bssid);
 
         if (pos!=-1) {
-            apStr += `ap${pos}, `;
+            apStr += `ap${pos},`;
             apNum.push(pos);
             mRssi.push(rssi[i].rssi);
         }
     }
 
     // delete apStr's last ch (,)
-    apStr = apStr.slice(0, -2);
+    apStr = apStr.slice(0, -1);
     
     // get Server's rssi
     let serverRssi = await mainDao.selectRssi(apStr);
