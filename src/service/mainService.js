@@ -95,6 +95,8 @@ async function postCoord(rssi) {
     let mX, mY, min;
 
     // compare mRssi with serverRssi (Euclidean distance)
+    console.log(`total num: ${serverRssi.length}`);
+    let cnt = 0;
     for (let i=0; i<serverRssi.length; i++) {
         // get only ap{n} value by list
         let sRssi = getListByRow(serverRssi[i], apNum);
@@ -104,6 +106,7 @@ async function postCoord(rssi) {
 
         if(sim >= 0.5) {
             // compare distance
+            cnt++;
             let dst = getDistance(mRssi, sRssi);
 
             if (dst < min || i == 0) {
@@ -112,8 +115,8 @@ async function postCoord(rssi) {
                 mY = serverRssi[i].y;
             }
         }
-        
     }
+    console.log(`count num: ${cnt}`);
 
     return {x: mX, y: mY};
 }
@@ -146,6 +149,7 @@ async function postCoordBefore(rssi){
             mRssi.push(rssi[i].rssi);
         }
     }
+    console.log(`corresponded ap num: ${mRssi.length}`);
 
     // delete apStr's last ch (,)
     apStr = apStr.slice(0, -2);
