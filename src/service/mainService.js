@@ -22,85 +22,7 @@ function getDistance(mVec, sVec) {
     return sum;
 }
 
-function getSimilarity(mVec, sVec) {
-    let sumM = 0;
-    let sumS = 0;
-    let mul = 0;
-
-    for(let i=0; i<mVec.length; i++) {
-        if(sVec[i] != null)
-            mul = mVec[i] * sVec[i];
-    }
-
-    for (let i=0; i<mVec.length; i++) {
-        sumM += mVec[i]**2;
-    }
-
-    for (let i=0; i<sVec.length; i++) {
-        sumS += sVec[i]**2;
-    }
-    return mul / (Math.sqrt(sumM) * Math.sqrt(sumS));
-}
-
-async function postCoord(rssi) {
-    // get Server's BSSID 8
-    let serverBssid = ['06:09:b4:76:cc:ac',
-        '06:09:b4:76:cc:d4',
-        '0a:09:b4:76:cc:94',
-        '0e:09:b4:76:cc:94',
-        '0e:09:b4:76:cc:ac',
-        '12:09:b4:76:cc:94',
-        '1a:09:b4:76:cc:94',
-        '1a:09:b4:76:cc:ac'
-    ];
-    
-    // become select sql attr like "ap0, ap3, ap5, ap7", [0, 3, 5, 7]
-    let apStr = '';
-    let apNum = [];
-
-    // user's rssi corresponding serverBssid
-    let mRssi = [];
-
-    for (let i=0; i<rssi.length; i++) {
-        let pos = serverBssid.indexOf(rssi[i].bssid);
-
-        if (pos!=-1) {
-            apStr += `ap${pos},`;
-            apNum.push(pos);
-            mRssi.push(rssi[i].rssi);
-        }
-    }
-
-    // delete apStr's last ch (,)
-    apStr = apStr.slice(0, -1);
-    
-    // get Server's rssi
-    let serverRssi = await mainDao.selectRssi(apStr);
-    
-    let mX, mY, min;
-
-    // compare mRssi with serverRssi (Euclidean distance)
-    for (let i=0; i<serverRssi.length; i++) {
-        // get only ap{n} value by list
-        let sRssi = getListByRow(serverRssi[i], apNum);
-
-        // calculate cosine similarity
-        let sim = getSimilarity(mRssi, sRssi);
-        if(sim >= 0.15) {
-            let dst = getDistance(mRssi, sRssi);
-
-            if (dst < min || i == 0) {
-                min = dst;
-                mX = serverRssi[i].x;
-                mY = serverRssi[i].y;
-            }
-        }
-    }
-
-    return {x: mX, y: mY};
-}
-
-async function postCoordBefore(rssi){
+async function postCoord(rssi){
     // get Server's BSSID 8
     let serverBssid = ['06:09:b4:76:cc:ac',
         '06:09:b4:76:cc:d4',
@@ -157,5 +79,4 @@ async function postCoordBefore(rssi){
 
 module.exports = {
     postCoord,
-    postCoordBefore,
 };
