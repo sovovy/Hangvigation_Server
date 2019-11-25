@@ -25,20 +25,11 @@ function getDistance(mVec, sVec) {
 function getSimilarity(mVec, sVec) {
     let sumM = 0;
     let sumS = 0;
-    let mul = [];
+    let mul = 0;
 
-    // matrix multiple
-    for(let i=0; i<mVec.length; i++){
-        var row = [];
-        for(let j=0; j<mVec.length; j++){
-            let x = 0;
-            for(let k=0; k<mVec.length; k++) {
-                if(sVec[k] != null)
-                    x += mVec[i][k]*sVec[k][j];
-            }
-            row.push(x);
-        }
-        mul.push(row);
+    for(let i=0; i<mVec.length; i++) {
+        if(sVec[i] != null)
+            mul = mVec[i] * sVec[i];
     }
 
     for (let i=0; i<mVec.length; i++) {
@@ -90,6 +81,8 @@ async function postCoord(rssi) {
     let mX, mY, min;
 
     // compare mRssi with serverRssi (Euclidean distance)
+    console.log(`total num: ${serverRssi.length}`);
+    let cnt = 0;
     for (let i=0; i<serverRssi.length; i++) {
         // get only ap{n} value by list
         let sRssi = getListByRow(serverRssi[i], apNum);
@@ -99,6 +92,7 @@ async function postCoord(rssi) {
 
         if(sim >= 0.5) {
             // compare distance
+            cnt++;
             let dst = getDistance(mRssi, sRssi);
 
             if (dst < min || i == 0) {
@@ -107,8 +101,8 @@ async function postCoord(rssi) {
                 mY = serverRssi[i].y;
             }
         }
-        
     }
+    console.log(`count num: ${cnt}`);
 
     return {x: mX, y: mY};
 }
@@ -141,6 +135,7 @@ async function postCoordBefore(rssi){
             mRssi.push(rssi[i].rssi);
         }
     }
+    console.log(`corresponded ap num: ${mRssi.length}`);
 
     // delete apStr's last ch (,)
     apStr = apStr.slice(0, -1);
