@@ -86,7 +86,16 @@ async function postRoute(node){
     const Graph = require('node-dijkstra');
     const graph = new Map();
 
+    let start, end;
+
     for(let i=0; i<serverRoute.length; i++) {
+        // 좌표 대입
+        if(serverRoute[i].x == node.x1 && serverRoute[i].y == node.y1) {
+            start = serverRoute[i].node_idx;
+        }
+        if(serverRoute[i].x == node.x2 && serverRoute[i].y == node.y2) {
+            end = serverRoute[i].node_idx;
+        }
 
         // 좌표 1개랑 연결된거 한개씩 push
         let temp = new Map();
@@ -109,8 +118,8 @@ async function postRoute(node){
     }
     const route = new Graph(graph);
     
-    // console.log(route.path(node.start, node.end));
-    return route.path(node.start, node.end);
+    // console.log(route.path(String(start), String(end)));
+    return route.path(String(start), String(end));
 }
 
 module.exports = {
