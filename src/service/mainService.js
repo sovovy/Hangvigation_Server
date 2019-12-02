@@ -77,6 +77,43 @@ async function postCoord(rssi){
     return {x: mX, y: mY};
 }
 
+async function postRoute(node){
+
+    // 서버에서 NODE 정보 받아오기
+    let serverRoute = await mainDao.selectRoute();
+
+    // 그래프 만들기
+    const Graph = require('node-dijkstra');
+    const graph = new Map();
+
+    for(let i=0; i<serverRoute.length; i++) {
+
+        // 좌표 1개랑 연결된거 한개씩 push
+        let temp = new Map();
+        
+        if(serverRoute[i].connect_a != null) {
+            temp.set(String(serverRoute[i].connect_a), serverRoute[i].weight_a);
+        }
+        if(serverRoute[i].connect_b != null) {
+            temp.set(String(serverRoute[i].connect_b), serverRoute[i].weight_b);
+        }
+        if(serverRoute[i].connect_c != null) {
+            temp.set(String(serverRoute[i].connect_c), serverRoute[i].weight_c);
+        }
+        if(serverRoute[i].connect_d != null) {
+            temp.set(String(serverRoute[i].connect_d), serverRoute[i].weight_d);
+        }
+        
+        // graph에 temp 추가
+        graph.set(String(serverRoute[i].node_idx), temp);
+    }
+    const route = new Graph(graph);
+    
+    // console.log(route.path(node.start, node.end));
+    return route.path(node.start, node.end);
+}
+
 module.exports = {
     postCoord,
+    postRoute,
 };
