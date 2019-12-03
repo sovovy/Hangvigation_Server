@@ -87,11 +87,20 @@ async function postRoute(node){
     const graph = new Map();
 
     let start, end;
+    let distance; // (출발지 좌표 <-> DB 좌표) 거리
+    let min = 10000; // (출발지 좌표 - DB 좌표) 최소값
 
     for(let i=0; i<serverRoute.length; i++) {
-        // 좌표 대입
-        if(serverRoute[i].x == node.x1 && serverRoute[i].y == node.y1 && serverRoute[i].z == node.z1) {
-            start = serverRoute[i].node_idx;
+
+        // (좌표 -> 노드)로 변환
+        if(serverRoute[i].z == node.z1) {
+            // 출발지 좌표 근처의 노드를 찾아 출발지로 설정
+            // 출발지 좌표와 DB 좌표를 비교했을때 거리가 가장 작은 좌표 찾기
+            distance = (Math.abs(node.x1 - serverRoute[i].x))**2 + (Math.abs(node.y1 - serverRoute[i].y))**2;
+            if(min > distance) {
+                min = distance;
+                start = serverRoute[i].node_idx;
+            }
         }
         if(serverRoute[i].x == node.x2 && serverRoute[i].y == node.y2 && serverRoute[i].z == node.z2) {
             end = serverRoute[i].node_idx;
@@ -118,7 +127,8 @@ async function postRoute(node){
     }
 
     const route = new Graph(graph);
-    console.log(route.path(String(start), String(end)));
+    // console.log(start, end);
+    // console.log(route.path(String(start), String(end)));
     
     // 경로: 노드idx -> 좌표로 변환
     let path = route.path(String(start), String(end));
