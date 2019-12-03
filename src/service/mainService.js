@@ -90,10 +90,10 @@ async function postRoute(node){
 
     for(let i=0; i<serverRoute.length; i++) {
         // 좌표 대입
-        if(serverRoute[i].x == node.x1 && serverRoute[i].y == node.y1) {
+        if(serverRoute[i].x == node.x1 && serverRoute[i].y == node.y1 && serverRoute[i].z == node.z1) {
             start = serverRoute[i].node_idx;
         }
-        if(serverRoute[i].x == node.x2 && serverRoute[i].y == node.y2) {
+        if(serverRoute[i].x == node.x2 && serverRoute[i].y == node.y2 && serverRoute[i].z == node.z2) {
             end = serverRoute[i].node_idx;
         }
 
@@ -116,10 +116,24 @@ async function postRoute(node){
         // graph에 temp 추가
         graph.set(String(serverRoute[i].node_idx), temp);
     }
+
     const route = new Graph(graph);
+    console.log(route.path(String(start), String(end)));
     
-    // console.log(route.path(String(start), String(end)));
-    return route.path(String(start), String(end));
+    // 경로: 노드idx -> 좌표로 변환
+    let path = route.path(String(start), String(end));
+    let routeCoord = [];
+
+    for(let i=0; i<path.length; i++) {
+        for(let j=0; j<serverRoute.length; j++) {
+            if(serverRoute[j].node_idx == path[i]) {
+                routeCoord.push({x : serverRoute[j].x, y : serverRoute[j].y, z : serverRoute[j].z});
+                break;
+            }
+        }
+    }
+    
+    return routeCoord;
 }
 
 module.exports = {
