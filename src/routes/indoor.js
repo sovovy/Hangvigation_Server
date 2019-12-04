@@ -18,4 +18,19 @@ router.get('/division/:divisionIdx', async (req, res)=>{
   }
 });
 
+router.get('/info/:indoorPlaceIdx', async (req, res)=>{
+  try {
+    const { indoorPlaceIdx } = req.params;
+
+    const result = await indoorService.getInfo(indoorPlaceIdx); 
+
+    response('Success', result, res, 200);
+
+} catch (error) {
+    console.log(error);
+    errorResponse(error.message, res, error.statusCode);
+    
+}
+});
+
 module.exports = router;

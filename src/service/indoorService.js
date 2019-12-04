@@ -12,6 +12,13 @@ async function getDivision(divisionIdx) {
     }
 }
 
+async function getInfo(indoorPlaceIdx) {
+    const info = await indoorDao.selectPlaceInfo(indoorPlaceIdx);
+    
+    return info[0];
+}
+
 module.exports = {
     getDivision,
+    getInfo,
 };
