@@ -3,6 +3,10 @@ const router = express.Router();
 const mainService = require('../service/mainService');
 const { response, errorResponse } = require('../library/response');
 
+const indoor = require('./indoor');
+
+router.use('/indoor', indoor);
+
 // (rssi) => {좌표}
 router.post('/coord', async (req, res)=>{
     try {
