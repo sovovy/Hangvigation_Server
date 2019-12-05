@@ -18,6 +18,22 @@ router.get('/division/:divisionIdx', async (req, res)=>{
   }
 });
 
+router.get('/info/search', async (req, res)=>{
+  try {
+
+    const { q } = req.query;
+
+    const result = await indoorService.getSearch(q); 
+
+    response('Success', result, res, 200);
+
+  } catch (error) {
+      console.log(error);
+      errorResponse(error.message, res, error.statusCode);
+
+  }
+});
+
 router.get('/info/:indoorPlaceIdx', async (req, res)=>{
   try {
     const { indoorPlaceIdx } = req.params;
@@ -26,11 +42,11 @@ router.get('/info/:indoorPlaceIdx', async (req, res)=>{
 
     response('Success', result, res, 200);
 
-} catch (error) {
-    console.log(error);
-    errorResponse(error.message, res, error.statusCode);
-    
-}
+  } catch (error) {
+      console.log(error);
+      errorResponse(error.message, res, error.statusCode);
+      
+  }
 });
 
 module.exports = router;

@@ -36,9 +36,28 @@ async function selectPlaceInfo(indoorPlaceIdx) {
     return result
 
 }
+async function selectPlaceByQuery(str, num) {
+    let sql = `
+    SELECT indoor_place_idx, name, building, num
+    FROM INDOOR_PLACE
+    WHERE ( name LIKE '%${str}%'
+    OR building LIKE '%${str}%'
+    OR tag1 LIKE '%${str}%'
+    OR tag2 LIKE '%${str}%'
+    OR tag3 LIKE '%${str}%' )
+    `;
+
+    if (num!=null)
+        sql += `AND num LIKE '%${num}%'`;
+
+    const result = await mysql.query(sql, [str, str, str, str, str]);
+
+    return result
+}
 
 module.exports = {
     selectParentIdx,
     selectPlaceByDivisionIdx,
     selectPlaceInfo,
+    selectPlaceByQuery,
 };

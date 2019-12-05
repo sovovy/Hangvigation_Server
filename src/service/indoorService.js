@@ -18,7 +18,30 @@ async function getInfo(indoorPlaceIdx) {
     return info[0];
 }
 
+async function getSearch(query) {
+    if (typeof query=='undefined') {
+        return ['메이커스페이스', '전산실', '소프트웨어학과', '편의점'];
+    }
+
+    let tmp = query.split(' ');
+    let str = '';
+    let num;
+
+    tmp.forEach(word => {
+        if (!isNaN(parseInt(word))) {
+            num = parseInt(word);
+        } else {
+            str += word;
+        }
+    });
+
+    const places = await indoorDao.selectPlaceByQuery(str, num);
+    
+    return places;
+}
+
 module.exports = {
     getDivision,
     getInfo,
+    getSearch,
 };
