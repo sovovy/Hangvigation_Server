@@ -18,7 +18,7 @@ router.get('/division/:divisionIdx', async (req, res)=>{
   }
 });
 
-router.get('/info/search', async (req, res)=>{
+router.get('/search', async (req, res)=>{
   try {
 
     const { q } = req.query;
