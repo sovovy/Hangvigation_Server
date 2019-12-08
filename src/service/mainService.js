@@ -54,10 +54,13 @@ async function postCoord(rssi){
     // delete apStr's last ch (,)
     apStr = apStr.slice(0, -1);
     
+    if (apStr == '') {
+        return {x: 0, y: 0, z: 0};
+    }
     // get Server's rssi
     let serverRssi = await mainDao.selectRssi(apStr);
     
-    let mX, mY, min;
+    let mX, mY, mZ, min;
 
     // compare mRssi with serverRssi (Euclidean distance)
     for (let i=0; i<serverRssi.length; i++) {
@@ -71,10 +74,11 @@ async function postCoord(rssi){
             min = dst;
             mX = serverRssi[i].x;
             mY = serverRssi[i].y;
+            mZ = serverRssi[i].z;
         }
     }
 
-    return {x: mX, y: mY};
+    return {x: mX, y: mY, z: mZ};
 }
 
 async function postRoute(node){
