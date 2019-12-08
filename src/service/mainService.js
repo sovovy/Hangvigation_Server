@@ -1,4 +1,6 @@
 const mainDao = require('../dao/mainDao');
+const request = require('request-promise-native');
+const {appKey} = require('../../config/appKey');
 
 function getListByRow(rssiRow, apNum) {
     let res = [];
@@ -127,8 +129,6 @@ async function postRoute(node){
     }
 
     const route = new Graph(graph);
-    // console.log(start, end);
-    // console.log(route.path(String(start), String(end)));
     
     // 경로: 노드idx -> 좌표로 변환
     let path = route.path(String(start), String(end));
@@ -146,7 +146,63 @@ async function postRoute(node){
     return routeCoord;
 }
 
+async function postOutdoor(coord) {
+
+    let headers = {};
+    headers["appKey"] = appKey;
+
+    let object = {
+        startX : coord.x1,
+        startY : coord.y1,
+        endX : coord.x2,
+        endY : coord.y2,
+        startName : "출발지",
+        endName : "도착지",
+        // reqCoordType : "WGS84GEO",
+        // resCoordType : "EPSG3857"
+    };
+
+    let route = [];
+
+    let options = {
+        headers : headers,
+        method : "POST",
+        async : false,
+        uri : "https://apis.openapi.sk.com/tmap/routes/pedestrian",
+        body : object,
+        json : true
+    };
+    await request(options)
+        .then(function(body){
+            for(let i=0; i<body.features.length; i++) {
+                if(body.features[i].geometry.type == "Point") {
+                    route.push({"type" : body.features[i].geometry.type, 
+                    "x" : body.features[i].geometry.coordinates[0],
+                    "y" : body.features[i].geometry.coordinates[1]});
+                }
+                else {
+                    for(let j=0; j<body.features[i].geometry.coordinates.length; j++) {
+                        route.push({"type" : body.features[i].geometry.type, 
+                        "x" : body.features[i].geometry.coordinates[j][0],
+                        "y" : body.features[i].geometry.coordinates[j][1]});
+                    }
+                }
+            }
+            
+            console.log(route);
+            return route;
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+    
+    
+    console.log(route);
+    return route;
+}
+
 module.exports = {
     postCoord,
     postRoute,
+    postOutdoor,
 };
