@@ -193,10 +193,10 @@ async function postOutdoor(coord) {
                 }
             }
             
-            // route에 총거리, 총소요시간 추가
+            // route에 총거리, 총소요시간 추가 (안드에서 받을때 편하려고 x,y로 바꿈)
             route.push({"type" : 'Properties',
-                        "totalDistance" : body.features[0].properties.totalDistance,
-                        "totalTime" : body.features[0].properties.totalTime});
+                        "x" : body.features[0].properties.totalDistance,
+                        "y" : Math.round(body.features[0].properties.totalTime / 60)}); // 초->분
             console.log(route);
             return route;
         })
