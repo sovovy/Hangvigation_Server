@@ -181,18 +181,22 @@ async function postOutdoor(coord) {
             for(let i=0; i<body.features.length; i++) {
                 if(body.features[i].geometry.type == "Point") {
                     route.push({"type" : body.features[i].geometry.type, 
-                    "x" : body.features[i].geometry.coordinates[0],
-                    "y" : body.features[i].geometry.coordinates[1]});
+                                "x" : body.features[i].geometry.coordinates[0],
+                                "y" : body.features[i].geometry.coordinates[1]});
                 }
                 else {
                     for(let j=0; j<body.features[i].geometry.coordinates.length; j++) {
                         route.push({"type" : body.features[i].geometry.type, 
-                        "x" : body.features[i].geometry.coordinates[j][0],
-                        "y" : body.features[i].geometry.coordinates[j][1]});
+                                    "x" : body.features[i].geometry.coordinates[j][0],
+                                    "y" : body.features[i].geometry.coordinates[j][1]});
                     }
                 }
             }
             
+            // route에 총거리, 총소요시간 추가
+            route.push({"type" : 'Properties',
+                        "totalDistance" : body.features[0].properties.totalDistance,
+                        "totalTime" : body.features[0].properties.totalTime});
             console.log(route);
             return route;
         })
