@@ -25,7 +25,20 @@ router.post('/route', async (req, res)=>{
   try {
     let result2 = await mainService.postRoute(req.body);
     response('Success', result2, res, 200);
-  } catch (error) {
+  } 
+  catch (error) {
+    console.log(error);
+    errorResponse(error.message, res, error.statusCode);
+  }
+});
+
+// (현재좌표, 도착좌표) => {도보 경로 리스트}
+router.post('/outdoor', async (req, res)=>{
+  try {
+    let result = await mainService.postOutdoor(req.body);
+    response('Success', result, res, 200);
+  } 
+  catch (error) {
     console.log(error);
     errorResponse(error.message, res, error.statusCode);
   }
