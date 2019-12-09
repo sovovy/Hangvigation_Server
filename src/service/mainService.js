@@ -2,6 +2,26 @@ const mainDao = require('../dao/mainDao');
 const request = require('request-promise-native');
 const {appKey} = require('../../config/appKey');
 
+// get Server's BSSID 8
+const serverBssid3 = [
+    '06:09:b4:76:cc:ac',
+    '06:09:b4:76:cc:d4',
+    '0a:09:b4:76:cc:94',
+    '0e:09:b4:76:cc:94',
+    '0e:09:b4:76:cc:ac',
+    '12:09:b4:76:cc:94',
+    '1a:09:b4:76:cc:94',
+    '1a:09:b4:76:cc:ac'
+];
+const serverBssid4 = [
+    '06:09:b4:76:cc:a4',
+    '00:09:b4:76:df:4c',
+    '00:09:b4:76:cc:8c',
+    '12:09:b4:76:cc:a4',
+    '06:09:b4:76:df:4c'
+];
+
+
 function getListByRow(rssiRow, apNum) {
     let res = [];
 
@@ -24,57 +44,51 @@ function getDistance(mVec, sVec) {
     return sum;
 }
 
-async function postCoord(rssi){
-    // get Server's BSSID 8
-    let serverBssid3 = ['06:09:b4:76:cc:ac',
-        '06:09:b4:76:cc:d4',
-        '0a:09:b4:76:cc:94',
-        '0e:09:b4:76:cc:94',
-        '0e:09:b4:76:cc:ac',
-        '12:09:b4:76:cc:94',
-        '1a:09:b4:76:cc:94',
-        '1a:09:b4:76:cc:ac'
-    ];
-    let serverBssid4 = [
-        '06:09:b4:76:cc:a4',
-        '00:09:b4:76:df:4c',
-        '00:09:b4:76:cc:8c',
-        '12:09:b4:76:cc:a4',
-        '06:09:b4:76:df:4c'
-    ];
-    
-    // become select sql attr like "ap0, ap3, ap5, ap7", [0, 3, 5, 7]
-    let apStr = '';
-    let apNum = [];
+function chkFloor(rssi) {
+    let apStr3 = '';
+    let apStr4 = '';
+    let apNum3 = [];
+    let apNum4 = [];
+    let mRssi3 = [];
+    let mRssi4 = [];
 
-    // user's rssi corresponding serverBssid
-    let mRssi = [];
-
-    let floor = 3;
     for (let i=0; i<rssi.length; i++) {
         let pos = serverBssid3.indexOf(rssi[i].bssid);
 
         if (pos!=-1) {
-            apStr += `ap${pos},`;
-            apNum.push(pos);
-            mRssi.push(rssi[i].rssi);
+            apStr3 += `ap${pos},`;
+            apNum3.push(pos);
+            mRssi3.push(rssi[i].rssi);
         }
     }
 
-    if (apStr == '') {
-        floor = 4;
+    for (let i=0; i<rssi.length; i++) {
+        let pos = serverBssid4.indexOf(rssi[i].bssid);
 
-        for (let i=0; i<rssi.length; i++) {
-            let pos = serverBssid4.indexOf(rssi[i].bssid);
+        if (pos!=-1) {
+            apStr4 += `ap${pos},`;
+            apNum4.push(pos);
+            mRssi4.push(rssi[i].rssi);
+        }
+    }
 
-            if (pos!=-1) {
-                apStr += `ap${pos},`;
-                apNum.push(pos);
-                mRssi.push(rssi[i].rssi);
-            }
-        }
-    }
+    if (apNum3.length <= apNum4.length)
+        return {floor: 4, apStr: apStr4, apNum: apNum4, mRssi: mRssi4}
+    else
+        return {floor: 3, apStr: apStr3, apNum: apNum3, mRssi: mRssi3}
+}
 
+async function postCoord(rssi){
+    const obj = chkFloor(rssi);
+    
+    // become select sql attr like "ap0, ap3, ap5, ap7", [0, 3, 5, 7]
+    let apStr = obj.apStr;
+    let apNum =  obj.apNum;
+
+    // user's rssi corresponding serverBssid
+    let mRssi = obj.mRssi;
+    let floor = obj.floor;
+    
     // delete apStr's last ch (,)
     apStr = apStr.slice(0, -1);
     
