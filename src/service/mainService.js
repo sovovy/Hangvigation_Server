@@ -24,7 +24,7 @@ function getDistance(mVec, sVec) {
 
 async function postCoord(rssi){
     // get Server's BSSID 8
-    let serverBssid = ['06:09:b4:76:cc:ac',
+    let serverBssid3 = ['06:09:b4:76:cc:ac',
         '06:09:b4:76:cc:d4',
         '0a:09:b4:76:cc:94',
         '0e:09:b4:76:cc:94',
@@ -32,6 +32,13 @@ async function postCoord(rssi){
         '12:09:b4:76:cc:94',
         '1a:09:b4:76:cc:94',
         '1a:09:b4:76:cc:ac'
+    ];
+    let serverBssid4 = [
+        '06:09:b4:76:cc:a4',
+        '00:09:b4:76:df:4c',
+        '00:09:b4:76:cc:8c',
+        '12:09:b4:76:cc:a4',
+        '06:09:b4:76:df:4c'
     ];
     
     // become select sql attr like "ap0, ap3, ap5, ap7", [0, 3, 5, 7]
@@ -41,8 +48,9 @@ async function postCoord(rssi){
     // user's rssi corresponding serverBssid
     let mRssi = [];
 
+    let floor = 3;
     for (let i=0; i<rssi.length; i++) {
-        let pos = serverBssid.indexOf(rssi[i].bssid);
+        let pos = serverBssid3.indexOf(rssi[i].bssid);
 
         if (pos!=-1) {
             apStr += `ap${pos},`;
@@ -51,6 +59,20 @@ async function postCoord(rssi){
         }
     }
 
+    if (apStr == '') {
+        floor = 4;
+
+        for (let i=0; i<rssi.length; i++) {
+            let pos = serverBssid4.indexOf(rssi[i].bssid);
+
+            if (pos!=-1) {
+                apStr += `ap${pos},`;
+                apNum.push(pos);
+                mRssi.push(rssi[i].rssi);
+            }
+        }
+    }
+
     // delete apStr's last ch (,)
     apStr = apStr.slice(0, -1);
     
@@ -58,9 +80,9 @@ async function postCoord(rssi){
         return {x: 0, y: 0, z: 0};
     }
     // get Server's rssi
-    let serverRssi = await mainDao.selectRssi(apStr);
+    let serverRssi = await mainDao.selectRssi(apStr, floor);
     
-    let mX, mY, mZ, min;
+    let mX, mY, min;
 
     // compare mRssi with serverRssi (Euclidean distance)
     for (let i=0; i<serverRssi.length; i++) {
@@ -78,7 +100,7 @@ async function postCoord(rssi){
         }
     }
 
-    return {x: mX, y: mY, z: mZ};
+    return {x: mX, y: mY, z: floor};
 }
 
 async function postRoute(node){
