@@ -80,7 +80,7 @@ function chkFloor(rssi) {
 
 async function postCoord(rssi){
     const obj = chkFloor(rssi);
-    
+    console.log('floor'+obj.floor);
     // become select sql attr like "ap0, ap3, ap5, ap7", [0, 3, 5, 7]
     let apStr = obj.apStr;
     let apNum =  obj.apNum;
@@ -233,7 +233,6 @@ async function postOutdoor(coord) {
             route.push({"type" : 'Properties',
                         "x" : body.features[0].properties.totalDistance,
                         "y" : Math.round(body.features[0].properties.totalTime / 60)}); // 초->분
-            console.log(route);
             return route;
         })
         .catch(function(err){
