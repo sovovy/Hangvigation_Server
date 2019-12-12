@@ -93,8 +93,8 @@ async function postRoute(node){
     const graph = new Map();
 
     let start, end;
-    let distance; // (출발지 좌표 <-> DB 좌표) 거리
-    let min = 10000; // (출발지 좌표 - DB 좌표) 최소값
+    let distanceStart, distanceEnd; // (출발지 좌표 <-> DB 좌표) 거리
+    let minStart = 10000, minEnd = 10000; // (출발지 좌표 - DB 좌표) 최소값
 
     for(let i=0; i<serverRoute.length; i++) {
 
@@ -102,15 +102,19 @@ async function postRoute(node){
         if(serverRoute[i].z == node.z1) {
             // 출발지 좌표 근처의 노드를 찾아 출발지로 설정
             // 출발지 좌표와 DB 좌표를 비교했을때 거리가 가장 작은 좌표 찾기
-            distance = (Math.abs(node.x1 - serverRoute[i].x))**2 + (Math.abs(node.y1 - serverRoute[i].y))**2;
-            if(min > distance) {
-                min = distance;
+            distanceStart = (Math.abs(node.x1 - serverRoute[i].x))**2 + (Math.abs(node.y1 - serverRoute[i].y))**2;
+            if(minStart > distanceStart) {
+                minStart = distanceStart;
                 start = serverRoute[i].node_idx;
             }
+
+            distanceEnd = (Math.abs(node.x2 - serverRoute[i].x))**2 + (Math.abs(node.y2 - serverRoute[i].y))**2;
+            if(minEnd > distanceEnd) {
+                minEnd = distanceEnd;
+                end = serverRoute[i].node_idx;
+            }
         }
-        if(serverRoute[i].x == node.x2 && serverRoute[i].y == node.y2 && serverRoute[i].z == node.z2) {
-            end = serverRoute[i].node_idx;
-        }
+        
 
         // 좌표 1개랑 연결된거 한개씩 push
         let temp = new Map();
