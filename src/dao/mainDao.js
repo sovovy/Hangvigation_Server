@@ -1,12 +1,13 @@
 const mysql = require('../library/mysql');
 
-async function selectRssi(apStr) {
+async function selectRssi(apStr, z) {
     const sql = `
     SELECT ap_rssi_idx, x, y, ${apStr}
     FROM AP_RSSI
+    WHERE z = (?)
     `;
 
-    const result = await mysql.query(sql, []);
+    const result = await mysql.query(sql, [z]);
 
     return result
 }
