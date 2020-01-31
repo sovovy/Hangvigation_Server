@@ -2,11 +2,13 @@
 
 ### 설치
 
-1. Android Studio
-2. NodeJS
-3. MySQL
-    * Node.js 프로젝트 폴더 안으로 이동한다. `cd [path]/Hangvigation_Server`
-    * `npm install mysql` 를 입력해 설치한다.
+* Node.js 설치 (Window + MacOS 전용)
+1. https://nodejs.org/ko/ 에 접속해 Node.js 설치
+
+* Node.js 설치 (Linux)
+1. `sudo apt-get install curl`
+2. `curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash –`
+3. `sudo apt-get install -y nodejs`
 
 ### 서버 실행
 
