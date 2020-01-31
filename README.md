@@ -1,14 +1,18 @@
 # 항비게이션
 
-### 설치
+### Node.js 설치
 
-* Node.js 설치 (Window + MacOS 전용)
+* Window, MacOS
 1. https://nodejs.org/ko/ 에 접속해 Node.js 설치
 
-* Node.js 설치 (Linux)
+<br/>
+
+* Linux
 1. `sudo apt-get install curl`
 2. `curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash –`
 3. `sudo apt-get install -y nodejs`
+
+<br/>
 
 ### 서버 실행
 
