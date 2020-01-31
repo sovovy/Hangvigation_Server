@@ -1,5 +1,13 @@
 # 항비게이션
 
+### 설치
+
+1. Android Studio
+2. NodeJS
+3. MySQL
+    * Node.js 프로젝트 폴더 안으로 이동한다. `cd [path]/Hangvigation_Server`
+    * `npm install mysql` 를 입력해 설치한다.
+
 ### 서버 실행
 
 1. Node.js 프로젝트 폴더 안으로 들어간다. `cd [path]/Hangvigation_Server`
